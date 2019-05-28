@@ -38,8 +38,12 @@ io.on('connection', async function(socket) {
   socket.on('disconnect', async () => {
     console.log('DISCONNECT', gameName, type, playerName);
     if (gameName) {
-      socket.to(`${gameName}`).emit('CLIENT_DISCONNECTED', { message: 'A player disconnected. Please disconnect.' });
-      Game.delete(gameName);
+      socket.to(`${gameName}`).emit('CLIENT_DISCONNECTED', { message: 'A player disconnected. This has quit the game. Please disconnect.' });
+      await Game.delete(gameName);
+
+      // Used to validate delete works
+      // const allRemainingGames = await Game.getAll();
+      // console.log('allRemainingGames', allRemainingGames);
     }
   });
 
@@ -550,6 +554,8 @@ io.on('connection', async function(socket) {
     let { villagers, werewolves } = game;
     const topVillagerPicks = modeOfArray(Object.values(game.villagerPicks));
 
+    // TODO 1 case for topVillagerPicks being split
+
     if (topVillagerPicks) {
       topVillagerPicks.forEach(pick => {
         newlyDeceased.push(pick);
@@ -559,10 +565,17 @@ io.on('connection', async function(socket) {
       });
     }
 
-    if (werewolves.length + 1 >= villagers.length || werewolves.length === 0) {
-      // Win condition
+    let win;
+    if (werewolves.length + 1 >= villagers.length) {
+      win = 'werewolves-win';
+    } else if (werewolves.length === 0) {
+      win = 'villagers-win';
+    }
+    
+    if (win) {
       if (await Game.endRound(gameName)) {
-        io.in(`${gameName}`).emit('ROUND_ENDED');
+        io.in(`${gameName}-players`).emit('PLAYER/ROUND_ENDED', { win });
+        socket.emit('HOST/ROUND_ENDED', { win, newlyDeceased });
       } else {
         socket.emit(
           'HOST/END_DAY_FAILED',

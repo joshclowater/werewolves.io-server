@@ -28,7 +28,8 @@ Game.prototype.create = async function(game) {
         name: game.name,
         gameStatus: 'waiting-for-players',
         host: game.host,
-        players: {}
+        players: {},
+        createdOn: Date.now()
       }
     }).promise();
   } catch (e) {
@@ -59,6 +60,24 @@ Game.prototype.get = async function(gameId) {
     return false;
   }
   return game && game.Item;
+}
+
+/**
+ * Gets all games.
+ * 
+ * @return {array} games
+ */
+Game.prototype.getAll = async function() {
+  let games;
+  try {
+    games = await (this.dynamoDB.scan({
+      TableName: this.tableName
+    }).promise());
+  } catch (e) {
+    console.error('Error getting games', e);
+    return false;
+  }
+  return games;
 }
 
 /**
@@ -350,3 +369,6 @@ Game.prototype.submitVillagerPick = async function(gameId, playerName, pick) {
   }
   return true;
 }
+
+// TODO here
+// Game.prototype.endRound
