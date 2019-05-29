@@ -370,5 +370,38 @@ Game.prototype.submitVillagerPick = async function(gameId, playerName, pick) {
   return true;
 }
 
-// TODO here
-// Game.prototype.endRound
+/**
+  * Sets the status to a win condition and updates deceased, villagers, and werewolves.
+  *
+  * @param {string} gameId
+  * @param {string} win
+  * @param {array} deceased
+  * @param {array} villagers
+  * @param {array} werewolves
+  * 
+  * @return {boolean} success
+**/
+Game.prototype.endRound = async function(gameId, win, deceased, villagers, werewolves) {
+  try {
+    await (this.dynamoDB.update({
+      TableName: this.tableName,
+      Key: {
+        name: gameId
+      },
+      UpdateExpression: `SET gameStatus = :gameStatus,
+                             deceased = :deceased,
+                             villagers = :villagers,
+                             werewolves = :werewolves`,
+      ExpressionAttributeValues: {
+        ':gameStatus': win,
+        ':deceased': deceased,
+        ':villagers': villagers,
+        ':werewolves': werewolves
+      }
+    }).promise());
+  } catch (e) {
+    console.error('Error ending round', e);
+    return false;
+  }
+  return true;
+}

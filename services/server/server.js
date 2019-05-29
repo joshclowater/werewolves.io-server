@@ -573,7 +573,7 @@ io.on('connection', async function(socket) {
     }
     
     if (win) {
-      if (await Game.endRound(gameName)) {
+      if (await Game.endRound(gameName, win, deceased, villagers, werewolves)) {
         io.in(`${gameName}-players`).emit('PLAYER/ROUND_ENDED', { win });
         socket.emit('HOST/ROUND_ENDED', { win, newlyDeceased });
       } else {
