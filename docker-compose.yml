@@ -1,20 +1,20 @@
 version: "3"
 networks:
-  chat:
+  werewolvesio:
 
 services:
   # Launch the Redis used for syncing messages between copies of the client app
   redis:
     image: redis
     networks:
-      - chat
+      - werewolvesio
     ports:
       - 6379:6379
 
   # Launch a local version of DynamoDB
   dynamodb-local:
     networks:
-      - chat
+      - werewolvesio
     image: amazon/dynamodb-local
     ports:
       - 8000:8000
@@ -24,7 +24,7 @@ services:
     depends_on:
       - dynamodb-local
     networks:
-      - chat
+      - werewolvesio
     build: ./deps/dynamodb-tables
     environment:
       DYNAMODB_ENDPOINT: http://dynamodb-local:8000
@@ -37,7 +37,7 @@ services:
       - redis
       - dynamodb-tables
     networks:
-      - chat
+      - werewolvesio
     build: ./services/server
     environment:
       LOCAL: "true"
@@ -54,7 +54,7 @@ services:
   #   depends_on:
   #     - client
   #   networks:
-  #     - chat
+  #     - werewolvesio
   #   build: ./services/test-suite
   #   environment:
   #     SELF_URL: http://client:3000

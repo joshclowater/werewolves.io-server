@@ -6,7 +6,7 @@ function Game() {
     region: config.REGION,
     endpoint: config.DYNAMODB_ENDPOINT
   });
-  this.tableName = `${config.ENV_NAME}_Games`;
+  this.tableName = `${config.ENV_NAME}_WerewolvesioGames`;
 }
 module.exports = new Game();
 
@@ -365,6 +365,41 @@ Game.prototype.submitVillagerPick = async function(gameId, playerName, pick) {
     }).promise());
   } catch (e) {
     console.error('Error submitting villager pick', e);
+    return false;
+  }
+  return true;
+}
+
+/**
+  * Sets the status to "day" and updates deceased and villagers.
+  *
+  * @param {string} gameId
+  * @param {array} deceased
+  * @param {array} villagers
+  * @param {array} werewolves
+  * 
+  * @return {boolean} success
+**/
+Game.prototype.endDay = async function(gameId, deceased, villagers, werewolves) {
+  try {
+    await (this.dynamoDB.update({
+      TableName: this.tableName,
+      Key: {
+        name: gameId
+      },
+      UpdateExpression: `SET gameStatus = :gameStatus,
+                             deceased = :deceased,
+                             villagers = :villagers,
+                             werewolves = :werewolves`,
+      ExpressionAttributeValues: {
+        ':gameStatus': 'day-ended',
+        ':deceased': deceased,
+        ':villagers': villagers,
+        ':werewolves': werewolves
+      }
+    }).promise());
+  } catch (e) {
+    console.error('Error ending day', e);
     return false;
   }
   return true;

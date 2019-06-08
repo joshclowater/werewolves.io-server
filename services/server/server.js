@@ -243,10 +243,10 @@ io.on('connection', async function(socket) {
       );
       return;
     }
-    if (game.gameStatus !== 'intro-to-round') {
+    if (!(game.gameStatus === 'intro-to-round' || game.gameStatus === 'day-ended')) {
       socket.emit(
         'HOST/START_NIGHT_FAILED',
-        { error: 'This game is not in the "intro-to-round" status.' }
+        { error: 'This game is not in the "intro-to-round" nor "day-ended" status.' }
       );
       return;
     }
@@ -293,6 +293,7 @@ io.on('connection', async function(socket) {
       return;
     }
 
+    // TODO randomize the order of villagers
     if (await Game.startWerewolvesPicks(gameName)) {
       socket.emit('HOST/WEREWOLVES_PICKS_STARTED');
       socket.to(`${gameName}-werewolves`).emit(
@@ -458,7 +459,7 @@ io.on('connection', async function(socket) {
             .map(player => player.name)
             .filter(player => !deceased.includes(player)) }
         );
-      socket.emit('HOST/DAY_STARTED', { newlyDeceased });
+      socket.emit('HOST/DAY_STARTED', { newlyDeceased: [newlyDeceased] });
     } else {
       socket.emit(
         'HOST/START_DAY_FAILED',
@@ -583,7 +584,7 @@ io.on('connection', async function(socket) {
         );
       }
     } else {
-      if (await Game.endDay(gameName, deceased, newVillagers, newWerewolves)) {
+      if (await Game.endDay(gameName, deceased, villagers, werewolves)) {
         if (newlyDeceased.length) {
           newlyDeceased.forEach(player => {
             const newlyDeceasedSocketId = game.players[player].socketId;

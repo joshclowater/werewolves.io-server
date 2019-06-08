@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Redis, and any other resources that the chat app needs.
+Description: Redis, and any other resources that the app needs.
 Parameters:
   EnvironmentName:
     Type: String
@@ -50,42 +50,23 @@ Resources:
       VpcSecurityGroupIds:
         - !GetAtt 'RedisSecurityGroup.GroupId'
 
-  # Table for storing user info
+  # Table for storing werewolves.io games
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['_', [!Ref 'EnvironmentName', 'Users']]
+      TableName: !Join ['_', [!Ref 'EnvironmentName', 'WerewolvesioGames']]
       AttributeDefinitions:
-        - AttributeName: username
+        - AttributeName: name
           AttributeType: S
       KeySchema:
-        - AttributeName: username
+        - AttributeName: name
           KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 10
-        WriteCapacityUnits: 10
-
-  # Table for storing the messages
-  MessagesTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: !Join ['_', [!Ref 'EnvironmentName', 'Messages']]
-      AttributeDefinitions:
-        - AttributeName: room
-          AttributeType: S
-        - AttributeName: message
-          AttributeType: S
-      KeySchema:
-        - AttributeName: room
-          KeyType: HASH
-        - AttributeName: message
-          KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 10
         WriteCapacityUnits: 10
 
   # A role for the service so it can access the tables
-  ChatServiceRole:
+  WerewolvesioServiceRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -109,7 +90,6 @@ Resources:
               - "dynamodb:DeleteItem"
             Resource:
               - !Join ['', ['arn:aws:dynamodb:*:*:table/', !Ref 'UsersTable']]
-              - !Join ['', ['arn:aws:dynamodb:*:*:table/', !Ref 'MessagesTable']]
 
 Outputs:
   RedisEndpoint:
@@ -117,9 +97,9 @@ Outputs:
     Value: !GetAtt 'Redis.RedisEndpoint.Address'
     Export:
       Name: !Join [ ':', [ !Ref 'EnvironmentName', 'RedisEndpoint' ] ]
-  ChatServiceRole:
-    Description: The role of the chat service
-    Value: !GetAtt 'ChatServiceRole.Arn'
+  WerewolvesioServiceRole:
+    Description: The role of the werewolves.io service
+    Value: !GetAtt 'WerewolvesioServiceRole.Arn'
     Export:
-      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'ChatServiceRole' ] ]
+      Name: !Join [ ':', [ !Ref 'EnvironmentName', 'WerewolvesioServiceRole' ] ]
 

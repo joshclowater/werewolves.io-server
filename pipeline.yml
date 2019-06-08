@@ -238,9 +238,9 @@ Resources:
                 - Name: BaseResources
 
         # And we deploy the application resources (Elasticache, DynamoDB, etc)
-        - Name: ChatResources
+        - Name: WerewolvesioResources
           Actions:
-            # Deploy the chat resources
+            # Deploy the werewolves.io resources
             - Name: Deploy
               ActionTypeId:
                 Category: Deploy
@@ -250,7 +250,7 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub ${EnvironmentName}-ChatResources
+                StackName: !Sub ${EnvironmentName}-WerewolvesioResources
                 TemplatePath: Source::resources.yml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
@@ -260,9 +260,9 @@ Resources:
               InputArtifacts:
                 - Name: Source
               OutputArtifacts:
-                - Name: ChatResources
+                - Name: WerewolvesioResources
 
-            # And build the chat docker image
+            # And build the werewolvesio docker image
             - Name: Build
               ActionTypeId:
                 Category: Build
@@ -289,8 +289,8 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE
                 RoleArn: !GetAtt CloudFormationDeployRole.Arn
-                StackName: !Sub ${EnvironmentName}-ChatService
-                TemplatePath: Source::chat-service.yml
+                StackName: !Sub ${EnvironmentName}-WerewolvesioService
+                TemplatePath: Source::werewolvesio-service.yml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: !Sub |
                   {

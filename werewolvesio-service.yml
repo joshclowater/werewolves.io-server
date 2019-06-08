@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Socket.io chat service
+Description: Werewolves.io service
 Parameters:
   EnvironmentName:
     Type: String
@@ -8,7 +8,7 @@ Parameters:
                  Used to locate other resources in the same environment.
   ServiceName:
     Type: String
-    Default: chat
+    Default: werewolvesio
     Description: A name for the service
   ImageUrl:
     Type: String
@@ -67,7 +67,7 @@ Resources:
           !Join [':', [!Ref 'EnvironmentName', 'ECSTaskExecutionRole']]
       TaskRoleArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'EnvironmentName', 'ChatServiceRole']]
+          !Join [':', [!Ref 'EnvironmentName', 'WerewolvesioServiceRole']]
       ContainerDefinitions:
         - Name: !Ref 'ServiceName'
           Cpu: !Ref 'ContainerCpu'

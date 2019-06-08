@@ -16,6 +16,7 @@
     "socket.io-redis": "5.2.0"
   },
   "scripts": {
-    "start": "LOCAL=true REGION=us-east-1 ENV_NAME=test REDIS_ENDPOINT=localhost DYNAMODB_ENDPOINT=http://localhost:8000 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test node index.js"
+    "start": "LOCAL=true REGION=us-east-1 ENV_NAME=test REDIS_ENDPOINT=localhost DYNAMODB_ENDPOINT=http://localhost:8000 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test node index.js",
+    "debug": "LOCAL=true REGION=us-east-1 ENV_NAME=test REDIS_ENDPOINT=localhost DYNAMODB_ENDPOINT=http://localhost:8000 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test node --inspect:9229 index.js"
   }
 }
