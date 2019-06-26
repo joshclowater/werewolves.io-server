@@ -1,6 +1,6 @@
-# Partymouth server
+# Werewolves.io server
 
-The server for the party game Partymouth built with [Node.js](https://nodejs.org/en/) and deployed using Amazon Web Services, running in Docker containers in [AWS Fargate](https://aws.amazon.com/fargate/).
+The server for the party game Werewolves.io built with [Node.js](https://nodejs.org/en/) and deployed using Amazon Web Services, running in Docker containers in [AWS Fargate](https://aws.amazon.com/fargate/).
 
 Features:
 
