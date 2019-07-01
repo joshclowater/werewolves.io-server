@@ -51,7 +51,7 @@ Resources:
         - !GetAtt 'RedisSecurityGroup.GroupId'
 
   # Table for storing werewolves.io games
-  UsersTable:
+  WerewolvesioGamesTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: !Join ['_', [!Ref 'EnvironmentName', 'WerewolvesioGames']]
@@ -89,7 +89,7 @@ Resources:
               - "dynamodb:UpdateItem"
               - "dynamodb:DeleteItem"
             Resource:
-              - !Join ['', ['arn:aws:dynamodb:*:*:table/', !Ref 'UsersTable']]
+              - !Join ['', ['arn:aws:dynamodb:*:*:table/', !Ref 'WerewolvesioGamesTable']]
 
 Outputs:
   RedisEndpoint:

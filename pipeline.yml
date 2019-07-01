@@ -165,7 +165,7 @@ Resources:
                 - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
             build:
               commands:
-                - docker build --tag "${IMAGE_URI}" ./services/client
+                - docker build --tag "${IMAGE_URI}" ./services/server
             post_build:
               commands:
                 - docker push "$IMAGE_URI"
