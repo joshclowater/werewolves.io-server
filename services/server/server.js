@@ -555,9 +555,7 @@ io.on('connection', async function(socket) {
     let { villagers, werewolves } = game;
     const topVillagerPicks = modeOfArray(Object.values(game.villagerPicks));
 
-    // TODO 1 case for topVillagerPicks being split
-
-    if (topVillagerPicks) {
+    if (topVillagerPicks && topVillagerPicks.length === 1) {
       topVillagerPicks.forEach(pick => {
         newlyDeceased.push(pick);
         deceased.push(pick);

@@ -1,8 +1,8 @@
-run:
+start:
 	docker-compose build --no-cache
 	docker-compose up -d
 
-build:
+restart:
 	docker-compose build client
 	docker-compose up --no-deps -d client
 	docker-compose logs -f client

@@ -135,6 +135,7 @@ Resources:
   # to use the addresses yourself, but most often this target group is just
   # connected to an application load balancer, or network load balancer, so
   # it can automatically distribute traffic across all the targets.
+  # TODO Need to fix TargetGroup health check. Maybe add healthcheck endpoint.
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:

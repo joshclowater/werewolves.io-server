@@ -20,7 +20,7 @@ To run the application on your local machine you need:
 Execute the following command:
 
 ```
-make run
+make start
 ```
 
 The application will be available at `http://localhost:3000`
@@ -28,7 +28,7 @@ The application will be available at `http://localhost:3000`
 If you make changes to the server code, you can run:
 
 ```
-make build
+make restart
 ```
 
 This updates the application.
