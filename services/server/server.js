@@ -3,6 +3,7 @@ var express = require('express');
 var config = require('./lib/config');
 
 var app = express();
+app.get('/status', (req, res) => res.send('up'));
 
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
@@ -37,13 +38,15 @@ io.on('connection', async function(socket) {
 
   socket.on('disconnect', async () => {
     console.log('DISCONNECT', gameName, type, playerName);
-    if (gameName) {
+    if (type === 'host') {
       socket.to(`${gameName}`).emit('CLIENT_DISCONNECTED', { message: 'A player disconnected. This has quit the game. Please disconnect.' });
       await Game.delete(gameName);
 
       // Used to validate delete works
       // const allRemainingGames = await Game.getAll();
       // console.log('allRemainingGames', allRemainingGames);
+    } else {
+      console.warn('Unhandled player disconnect.')
     }
   });
 
